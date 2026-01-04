@@ -1,6 +1,6 @@
 {
   "name": "@page-speed/venn-diagram",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Dynamic, data-driven Venn diagram component for React. Renders area-proportional Venn and Euler diagrams with interactive hover/click events.",
   "author": "DashTrack Team",
   "license": "MIT",

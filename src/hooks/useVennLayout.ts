@@ -21,8 +21,6 @@ export const useVennLayout = (
   options: UseVennLayoutOptions = {}
 ): UseVennLayoutReturn => {
   const { width = 600, height = 400, padding = 40 } = options;
-  const [error, setError] = useState<Error | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Transform component data format to @upsetjs/venn.js format
   const vennData = useMemo(() => {
@@ -37,40 +35,63 @@ export const useVennLayout = (
     }));
 
     return [...sets, ...intersections];
-  }, [data]);
+  }, [data.sets, data.intersections]);
 
-  // Calculate layout using @upsetjs/venn.js
-  const layout = useMemo(() => {
+  const { layout, textPositions, error } = useMemo(() => {
     try {
-      setIsLoading(true);
-      setError(null);
-
-      // venn.layout() computes optimal circle positions
-      // Returns array of circle objects with x, y, radius
       const computed = venn.layout(vennData, {
-        width: width - padding * 2,
-        height: height - padding * 2,
+        width,
+        height,
+        padding,
       });
 
-      const circles: CircleLayout[] = computed
-        .filter((d: any) => d.circles && d.circles.length === 1)
-        .map((d: any) => ({
-          x: padding + (d.x || 0) + (width - padding * 2) / 2,
-          y: padding + (d.y || 0) + (height - padding * 2) / 2,
-          radius: d.radius || 0,
-          set: d.sets[0],
+      const circleLookup = new Map<string, CircleLayout>();
+
+      computed.forEach((entry: any) => {
+        const sets = entry?.data?.sets;
+        const circles = entry?.circles;
+        if (
+          Array.isArray(sets) &&
+          sets.length === 1 &&
+          Array.isArray(circles) &&
+          circles[0]
+        ) {
+          const circle = circles[0];
+          circleLookup.set(sets[0], {
+            x: circle.x ?? 0,
+            y: circle.y ?? 0,
+            radius: circle.radius ?? 0,
+            set: sets[0],
+          });
+        }
+      });
+
+      const circles = data.sets.map((set) => {
+        return (
+          circleLookup.get(set.name) ?? {
+            x: 0,
+            y: 0,
+            radius: 0,
+            set: set.name,
+          }
+        );
+      });
+
+      const positions = computed
+        .filter((entry: any) => entry?.text && entry?.data?.sets)
+        .map((entry: any) => ({
+          x: entry.text?.x ?? 0,
+          y: entry.text?.y ?? 0,
+          setNames: Array.isArray(entry.data?.sets) ? entry.data.sets : [],
         }));
 
-      return circles;
+      return { layout: circles, textPositions: positions, error: null };
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
-      setError(error);
       console.error("Venn diagram layout error:", error);
-      return [];
-    } finally {
-      setIsLoading(false);
+      return { layout: [], textPositions: [], error };
     }
-  }, [vennData, width, height, padding]);
+  }, [vennData, width, height, padding, data.sets]);
 
   // Generate SVG paths for circles
   const paths = useMemo(() => {
@@ -82,30 +103,12 @@ export const useVennLayout = (
     });
   }, [layout]);
 
-  // Calculate optimal text positions (center of each circle + intersections)
-  const textPositions = useMemo(() => {
-    try {
-      const computed = venn.layout(vennData, {
-        width: width - padding * 2,
-        height: height - padding * 2,
-      });
-
-      return computed.map((d: any) => ({
-        x: padding + (d.x || 0) + (width - padding * 2) / 2,
-        y: padding + (d.y || 0) + (height - padding * 2) / 2,
-        setNames: d.sets,
-      }));
-    } catch {
-      return [];
-    }
-  }, [vennData, width, height, padding]);
-
   return {
     layout,
     paths,
     textPositions,
     error,
-    isLoading,
+    isLoading: false,
   };
 };
 

@@ -60,7 +60,7 @@ export const VennDiagram: React.FC<VennDiagramProps> = ({
   const dimensions = useResponsiveVennSize(
     containerRef,
     width,
-    responsive ? width : undefined
+    height
   );
 
   const finalWidth = responsive ? dimensions.width : width;
