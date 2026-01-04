@@ -25,7 +25,11 @@ export default {
       exports: "named",
     },
   ],
-  external: ["react", "react-dom", "d3", "@upsetjs/venn.js"],
+  // Treat React as external, but bundle @upsetjs/venn.js directly to
+  // avoid relying on its Node export map (which currently points the
+  // CJS "require" entry to a non-existent build/index.js file).
+  // This keeps consumption simple for both ESM and CJS environments.
+  external: ["react", "react-dom", "d3"],
   plugins: [
     resolve({
       extensions: [".ts", ".tsx", ".js", ".jsx"],
