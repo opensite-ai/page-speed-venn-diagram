@@ -190,8 +190,8 @@ export const VennDiagram: React.FC<VennDiagramProps> = ({
           )}
         </div>
 
-        {showLegend && (
-          <div className="mt-4 flex flex-col gap-2">
+	        {showLegend && (
+	          <div className="mt-4 flex flex-col gap-2 venn-legend">
             {data.sets.map((set, idx) => (
               <div
                 key={set.name}
