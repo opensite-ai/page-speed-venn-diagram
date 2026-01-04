@@ -1,0 +1,98 @@
+{
+  "name": "@page-speed/venn-diagram",
+  "version": "0.0.1",
+  "description": "Dynamic, data-driven Venn diagram component for React. Renders area-proportional Venn and Euler diagrams with interactive hover/click events.",
+  "author": "DashTrack Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opensite-ai/page-speed-venn-diagram"
+  },
+  "bugs": {
+    "url": "https://github.com/opensite-ai/page-speed-venn-diagram/issues"
+  },
+  "homepage": "https://github.com/opensite-ai/page-speed-venn-diagram#readme",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./styles": "./dist/esm/styles/index.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "dependencies": {
+    "d3": "^7.8.0",
+    "venn.js": "^0.2.20"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.23.0",
+    "@babel/preset-react": "^7.23.0",
+    "@babel/preset-typescript": "^7.23.0",
+    "@rollup/plugin-babel": "^6.0.0",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "@storybook/addon-essentials": "^7.4.0",
+    "@storybook/react": "^7.4.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@types/d3": "^7.4.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "jest-environment-jsdom": "^29.0.0",
+    "postcss": "^8.4.0",
+    "rollup": "^3.28.0",
+    "storybook": "^7.4.0",
+    "typescript": "^5.2.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "build:watch": "rollup -c --watch",
+    "dev": "npm run build:watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "type-check": "tsc --noEmit",
+    "prepublish": "npm run build && npm run type-check && npm run test"
+  },
+  "keywords": [
+    "venn-diagram",
+    "euler-diagram",
+    "data-visualization",
+    "react",
+    "d3",
+    "area-proportional",
+    "set-operations",
+    "dashboard",
+    "competitor-analysis"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
