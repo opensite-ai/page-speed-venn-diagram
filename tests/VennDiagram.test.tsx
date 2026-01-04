@@ -65,4 +65,3 @@ describe("VennDiagram", () => {
     expect(vennContainer).toHaveStyle("width: 100%");
   });
 });
-

@@ -158,24 +158,28 @@ export const VennDiagram: React.FC<VennDiagramProps> = ({
   return (
     <VennDiagramContext.Provider value={contextValue}>
       <div
-        ref={containerRef}
-        className={`${styles.vennContainer} ${className || ""}`}
-        style={{
-          width: responsive ? "100%" : finalWidth,
-          height: responsive ? "100%" : finalHeight,
-          ...style,
-        }}
+        className={`${styles.vennRoot} ${className || ""}`}
+        style={style}
         data-testid={testId}
       >
-        {renderer === "svg" && (
-          <VennDiagramSVG
-            layout={layout}
-            textPositions={textPositions}
-            width={finalWidth}
-            height={finalHeight}
-            onClick={onClick}
-          />
-        )}
+        <div
+          ref={containerRef}
+          className={styles.vennContainer}
+          style={{
+            width: responsive ? "100%" : finalWidth,
+            height: responsive ? "100%" : finalHeight,
+          }}
+        >
+          {renderer === "svg" && (
+            <VennDiagramSVG
+              layout={layout}
+              textPositions={textPositions}
+              width={finalWidth}
+              height={finalHeight}
+              onClick={onClick}
+            />
+          )}
+        </div>
 
         {showLegend && (
           <div className={styles.legend}>
