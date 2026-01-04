@@ -87,7 +87,7 @@ utility-modules/
 
   "dependencies": {
     "d3": "^7.8.0",
-    "venn.js": "^0.2.20"
+    "@upsetjs/venn.js": "^2.0.0"
   },
   "peerDependencies": {
     "react": "^18.0.0",
@@ -124,7 +124,7 @@ utility-modules/
   "scripts": {
     "build": "rollup -c",
     "build:watch": "rollup -c --watch",
-    "dev": "npm run build:watch",
+    "dev": "pnpm run build:watch",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
@@ -133,7 +133,7 @@ utility-modules/
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
     "type-check": "tsc --noEmit",
-    "prepublish": "npm run build && npm run type-check && npm run test"
+    "prepublish": "pnpm run build && pnpm run type-check && pnpm run test"
   },
   "keywords": [
     "venn-diagram",
@@ -248,7 +248,7 @@ export interface VennData {
 }
 
 /**
- * Circle layout information (computed by venn.js)
+ * Circle layout information (computed by @upsetjs/venn.js)
  */
 export interface CircleLayout {
   x: number;
@@ -317,11 +317,11 @@ export interface VennDiagramContextType {
 
 ### 2.2 Layout Hook (src/hooks/useVennLayout.ts)
 
-This hook handles all venn.js integration and layout calculations:
+This hook handles all @upsetjs/venn.js integration and layout calculations:
 
 ```typescript
 import { useEffect, useState, useMemo, useCallback } from "react";
-import * as venn from "venn.js";
+import * as venn from "@upsetjs/venn.js";
 import {
   VennData,
   CircleLayout,
@@ -335,7 +335,7 @@ interface UseVennLayoutOptions {
 }
 
 /**
- * Hook that computes Venn diagram layout using venn.js
+ * Hook that computes Venn diagram layout using @upsetjs/venn.js
  * Handles responsive sizing and dynamic data updates
  */
 export const useVennLayout = (
@@ -346,7 +346,7 @@ export const useVennLayout = (
   const [error, setError] = useState<Error | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Transform component data format to venn.js format
+  // Transform component data format to @upsetjs/venn.js format
   const vennData = useMemo(() => {
     const sets = data.sets.map((set) => ({
       sets: [set.name],
@@ -361,7 +361,7 @@ export const useVennLayout = (
     return [...sets, ...intersections];
   }, [data]);
 
-  // Calculate layout using venn.js
+  // Calculate layout using @upsetjs/venn.js
   const layout = useMemo(() => {
     try {
       setIsLoading(true);
@@ -1122,7 +1122,7 @@ export default {
       exports: "named",
     },
   ],
-  external: ["react", "react-dom", "d3", "venn.js"],
+  external: ["react", "react-dom", "d3", "@upsetjs/venn.js"],
   plugins: [
     resolve({
       extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -1319,22 +1319,22 @@ Before publishing to npm registry:
 
 ```bash
 # 1. Build the package
-npm run build
+pnpm run build
 
 # 2. Run type checking
-npm run type-check
+pnpm run type-check
 
 # 3. Run tests
-npm run test:coverage
+pnpm run test:coverage
 
 # 4. Run linting
-npm run lint
+pnpm run lint
 
 # 5. Build storybook
-npm run storybook:build
+pnpm run storybook:build
 
 # 6. Verify bundle size
-npm run build && \
+pnpm run build && \
   du -h dist/esm/index.js && \
   du -h dist/cjs/index.js
 
@@ -1369,13 +1369,13 @@ fi
 
 # Run all checks
 echo -e "${YELLOW}Running checks...${NC}"
-npm run lint
-npm run type-check
-npm run test
+pnpm run lint
+pnpm run type-check
+pnpm run test
 
 # Build
 echo -e "${YELLOW}Building...${NC}"
-npm run build
+pnpm run build
 
 # Verify bundle sizes
 echo -e "${YELLOW}Bundle sizes:${NC}"
@@ -1528,7 +1528,7 @@ jobs:
         working-directory: utility-modules/venn-diagram
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
         working-directory: utility-modules/venn-diagram
 
       - name: Publish to npm
@@ -1546,7 +1546,7 @@ jobs:
 
 - [ ] Set up project structure and dependencies
 - [ ] Implement core types and interfaces
-- [ ] Create useVennLayout hook with venn.js integration
+- [ ] Create useVennLayout hook with @upsetjs/venn.js integration
 - [ ] Write unit tests for layout calculations
 
 ### Phase 2: Component Implementation (Week 2-3)
@@ -1581,7 +1581,7 @@ jobs:
 
 ## Summary
 
-This implementation uses **D3.js + venn.js** as the optimal solution:
+This implementation uses **D3.js + @upsetjs/venn.js** as the optimal solution:
 
 1. **No viable alternatives** for the core requirement (dynamic circle positioning based on data)
 2. **Bundle impact is manageable** through tree-shaking and optional dependencies

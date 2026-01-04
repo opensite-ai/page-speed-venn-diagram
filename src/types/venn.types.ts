@@ -28,7 +28,7 @@ export interface VennData {
 }
 
 /**
- * Circle layout information (computed by venn.js)
+ * Circle layout information (computed by @upsetjs/venn.js)
  */
 export interface CircleLayout {
   x: number;
