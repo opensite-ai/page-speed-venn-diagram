@@ -1,7 +1,6 @@
 import React, { useContext, useCallback } from "react";
 import { CircleLayout } from "../types/venn.types";
 import { VennDiagramContext } from "./VennDiagramContext";
-import styles from "../styles/VennDiagram.module.css";
 
 interface VennDiagramSVGProps {
   layout: CircleLayout[];
@@ -64,7 +63,7 @@ export const VennDiagramSVG: React.FC<VennDiagramSVGProps> = ({
       viewBox={`0 0 ${width} ${height}`}
       width={width}
       height={height}
-      className={styles.svg}
+      className="block h-full w-full"
       role="img"
       aria-label="Venn diagram"
     >
@@ -74,9 +73,12 @@ export const VennDiagramSVG: React.FC<VennDiagramSVGProps> = ({
         const color = colorScheme ? colorScheme[idx] : "#ccc";
         const isHovered = hoveredSets?.includes(set.name);
         const isSelected = selectedSets?.includes(set.name);
+        const effectiveStrokeWidth = isHovered
+          ? Math.max(strokeWidth || 0, 3)
+          : strokeWidth;
 
         return (
-          <g key={set.name} className={styles.circleGroup}>
+          <g key={set.name} className="outline-none">
             <circle
               cx={circle.x}
               cy={circle.y}
@@ -84,14 +86,15 @@ export const VennDiagramSVG: React.FC<VennDiagramSVGProps> = ({
               fill={color}
               fillOpacity={isHovered ? config.hoverOpacity : 0.4}
               stroke={color}
-              strokeWidth={strokeWidth}
-              className={`${styles.circle} ${
-                isSelected ? styles.selected : ""
-              }`}
-              style={{
-                transition: animated ? "all 300ms ease-in-out" : "none",
-                cursor: config.interactive ? "pointer" : "default",
-              }}
+              strokeWidth={effectiveStrokeWidth}
+              className={[
+                "outline-none focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+                animated ? "transition-all duration-300 ease-in-out" : "",
+                config.interactive ? "cursor-pointer" : "cursor-default",
+                isSelected ? "drop-shadow-sm" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
               onMouseEnter={() => handleCircleHover(set.name, true)}
               onMouseLeave={() => handleCircleHover(set.name, false)}
               onClick={() => handleCircleClick(set.name)}
@@ -144,10 +147,14 @@ export const VennDiagramSVG: React.FC<VennDiagramSVGProps> = ({
         return (
           <g
             key={setNames.join(",")}
-            className={styles.labelGroup}
+            className={[
+              "pointer-events-none select-none",
+              animated ? "transition-opacity duration-300 ease-in-out" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
             style={{
               opacity: isHovered ? 1 : 0.7,
-              transition: animated ? "opacity 300ms ease-in-out" : "none",
             }}
           >
             {showValues && (
@@ -155,10 +162,8 @@ export const VennDiagramSVG: React.FC<VennDiagramSVGProps> = ({
                 x={pos.x}
                 y={pos.y - 8}
                 textAnchor="middle"
-                className={styles.value}
+                className="text-base font-semibold"
                 fill={config.textFill}
-                fontSize="16"
-                fontWeight="600"
               >
                 {config.formatValue ? config.formatValue(value) : value}
               </text>
@@ -169,9 +174,8 @@ export const VennDiagramSVG: React.FC<VennDiagramSVGProps> = ({
                 x={pos.x}
                 y={pos.y + 20}
                 textAnchor="middle"
-                className={styles.label}
+                className="text-sm font-medium"
                 fill={config.textFill}
-                fontSize="14"
               >
                 {renderedLabel}
               </text>

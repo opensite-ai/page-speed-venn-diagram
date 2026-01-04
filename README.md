@@ -50,6 +50,11 @@ export function MyDashboard() {
 }
 ```
 
+## Styling
+
+This component uses Tailwind utility classes for its default styling. Make sure
+your Tailwind `content` config includes this package so the classes are
+generated (for example, `./node_modules/@page-speed/venn-diagram/dist/**/*.{js,ts,jsx,tsx}`).
 
 ## API Overview
 

@@ -2,7 +2,6 @@ import React, { useRef, useState, useMemo } from "react";
 import { VennDiagramProps, VennDiagramContextType } from "../types/venn.types";
 import { useVennLayout, useResponsiveVennSize } from "../hooks/useVennLayout";
 import { getColorScheme } from "../utils/colorScheme";
-import styles from "../styles/VennDiagram.module.css";
 import { VennDiagramSVG } from "./VennDiagramSVG";
 import { VennDiagramContext } from "./VennDiagramContext";
 
@@ -127,16 +126,25 @@ export const VennDiagram: React.FC<VennDiagramProps> = ({
     ]
   );
 
+  const rootClassName = [
+    "relative w-full",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   // Error state
   if (error) {
     return (
       <div
-        className={styles.error}
+        className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border border-red-200/70 bg-red-50 px-4 py-6 text-sm text-red-600"
         role="alert"
         data-testid={testId ? `${testId}-error` : undefined}
       >
         <p>Error rendering Venn diagram:</p>
-        <code>{error.message}</code>
+        <code className="w-full rounded-md bg-black/5 px-2 py-1 font-mono text-xs text-red-700">
+          {error.message}
+        </code>
       </div>
     );
   }
@@ -145,7 +153,7 @@ export const VennDiagram: React.FC<VennDiagramProps> = ({
   if (isLoading && layout.length === 0) {
     return (
       <div
-        className={styles.loading}
+        className="flex w-full items-center justify-center text-sm text-slate-500"
         role="status"
         aria-busy
         data-testid={testId ? `${testId}-loading` : undefined}
@@ -158,17 +166,18 @@ export const VennDiagram: React.FC<VennDiagramProps> = ({
   return (
     <VennDiagramContext.Provider value={contextValue}>
       <div
-        className={`${styles.vennRoot} ${className || ""}`}
+        className={rootClassName}
         style={style}
         data-testid={testId}
       >
         <div
           ref={containerRef}
-          className={styles.vennContainer}
+          className="relative h-full w-full min-h-[300px]"
           style={{
             width: responsive ? "100%" : finalWidth,
             height: responsive ? "100%" : finalHeight,
           }}
+          data-venn-container
         >
           {renderer === "svg" && (
             <VennDiagramSVG
@@ -182,21 +191,21 @@ export const VennDiagram: React.FC<VennDiagramProps> = ({
         </div>
 
         {showLegend && (
-          <div className={styles.legend}>
+          <div className="mt-4 flex flex-col gap-2">
             {data.sets.map((set, idx) => (
               <div
                 key={set.name}
-                className={styles.legendItem}
+                className="flex items-center justify-between gap-3 rounded-md border border-l-4 border-slate-200/70 bg-white/80 px-3 py-2 text-sm"
                 style={{
                   borderLeftColor: colorScheme[idx],
                 }}
               >
-                <span className={styles.legendLabel}>
+                <span className="text-sm font-medium text-slate-700">
                   {formatLabel && typeof (set.label || set.name) === "string"
                     ? formatLabel((set.label || set.name) as string)
                     : set.label || set.name}
                 </span>
-                <span className={styles.legendValue}>
+                <span className="text-sm font-semibold text-slate-600">
                   {formatValue ? formatValue(set.size) : set.size}
                 </span>
               </div>

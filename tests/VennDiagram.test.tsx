@@ -61,7 +61,7 @@ describe("VennDiagram", () => {
   it("supports responsive sizing", () => {
     const { container } = render(<VennDiagram data={mockData} responsive />);
 
-    const vennContainer = container.querySelector('[class*="vennContainer"]');
+    const vennContainer = container.querySelector("[data-venn-container]");
     expect(vennContainer).toHaveStyle("width: 100%");
   });
 });
